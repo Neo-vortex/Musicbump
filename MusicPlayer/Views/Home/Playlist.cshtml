@@ -7,9 +7,9 @@
 @inject UserManager<IdentityUser> UserManager
 @inject UserMusicService UserMusicService
 
-<div >
+<div  >
     <h1>Playlists:</h1>
-    <ol>
+    <ol >
               @{
                     List<UserPlaylist>? _playlists;
                     _playlists = (await UserMusicService.GetPlaylistForUser(new User() {Email = User.Identity?.Name}) ?? throw new InvalidOperationException()).ToList();
@@ -30,7 +30,7 @@
     </ol>
 
     <div>
-        <button >
+        <button  >
                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="CreateNewPlaylist">Create a new playlist now!</a>
         </button>
         

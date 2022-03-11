@@ -28,8 +28,8 @@ public class PlaylistController : Controller
     {
         if (!await _userMusicService.UserHasPlaylist(new User() {Email = User.Identity?.Name}, playlist))
             return NotFound("You do not have this playlist");
-        ViewBag.Message = "h";
-        return Ok("fine");
+        ViewBag.Message = "hello";
+        return View();
     }
     [Route("[controller]/{playlist}/rename/{newname}")]
     [Authorize]

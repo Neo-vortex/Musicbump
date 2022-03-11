@@ -97,6 +97,7 @@ public class UserMusicService
                 }
 
                 var x = _db._users.Single(usr => usr.Email == user.Email);
+                if (x.UserPlaylist.Any(list => list.Name == userPlaylist.Name)) return 0;
                 x.UserPlaylist.Add(new UserPlaylist()
                     {Name = userPlaylist.Name, Songs = new List<UserSong>()});
                 return _db.SaveChanges();
