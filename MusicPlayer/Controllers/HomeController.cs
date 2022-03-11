@@ -24,21 +24,16 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        if (_signInManager.IsSignedIn(User))
-        {
-            _logger.LogInformation($"New Request for index from an authorized user : {User.Identity?.Name}");
-        }
-        else
-        {
-            _logger.LogInformation($"New Request for index from  an unauthorized user");
-        }
+        _logger.LogInformation(_signInManager.IsSignedIn(User)
+            ? $"New Request for index from an authorized user : {User.Identity?.Name}"
+            : $"New Request for index from  an unauthorized user");
         return View();
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
-        return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
+        return View();
     }
 
     [Authorize]

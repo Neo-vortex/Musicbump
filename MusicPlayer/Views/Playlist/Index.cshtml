@@ -15,15 +15,13 @@
     @ViewBag.Message
 </div>*@
 <h1>Hello</h1>
-<script src='../js/wavesurfer.js'></script>
+
 <div id="waveform"></div>
-<script>
-const wavesurfer = WaveSurfer.create({
-    container: '#waveform',
-    scrollParent: true
-});
-wavesurfer.load('../test.mp3');
-wavesurfer.on('ready', function () {
-    wavesurfer.play();
-});
-</script>
+<div>
+    <button id="playpause">play/pause</button>
+    <button id="next">next</button>
+    <button id="previous">previous</button>
+    <button id="muteunmute">mute/unmute</button>
+</div>
+<script src='../js/wavesurfer.js'></script>
+<script src="../js/player.js"></script>
