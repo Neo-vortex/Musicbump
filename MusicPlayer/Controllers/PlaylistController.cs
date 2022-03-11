@@ -28,18 +28,25 @@ public class PlaylistController : Controller
     {
         if (!await _userMusicService.UserHasPlaylist(new User() {Email = User.Identity?.Name}, playlist))
             return NotFound("You do not have this playlist");
+        ViewBag.Message = "h";
         return Ok("fine");
     }
     [Route("[controller]/{playlist}/rename/{newname}")]
     [Authorize]
-    public IActionResult Rename(string playlist, string newname )
+    public  async Task<IActionResult> Rename(string playlist, string newname )
     {
+        if (!await _userMusicService.UserHasPlaylist(new User() {Email = User.Identity?.Name}, playlist))
+            return NotFound("You do not have this playlist");
+        var result = await _userMusicService.RenamePlaylist(new User() {Email = User.Identity.Name}, playlist , newname);
         return Ok("fine");
     }
     [Route("[controller]/{playlist}/remove/")]
     [Authorize]
-    public IActionResult Remove(string playlist )
+    public  async Task<IActionResult> Remove(string playlist )
     {
-        return Ok("fine");
+        if (!await _userMusicService.UserHasPlaylist(new User() {Email = User.Identity?.Name}, playlist))
+            return NotFound("You do not have this playlist");
+        var result = await _userMusicService.RemovePlaylist(new User() {Email = User.Identity.Name}, playlist);
+        return Ok(result);
     }
 }

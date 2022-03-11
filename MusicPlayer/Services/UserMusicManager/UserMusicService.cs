@@ -14,6 +14,36 @@ public class UserMusicService
         _db = new UserMusicdb();
     }
 
+    public Task<int> RenamePlaylist(User user, string playlistname , string newplaylistname)
+    {
+        return  Task.Run(() =>
+        {
+            lock (_lock)
+            {
+                var _user = _db._users.Include(usr => usr.UserPlaylist).Single(usr => usr.Email == user.Email);
+                _user.UserPlaylist[_user.UserPlaylist.FindIndex(list => list.Name == playlistname)].Name = newplaylistname ;
+                _db._users.Update(_user);
+                return _db.SaveChanges();
+            }
+
+        });
+    }
+
+    public Task<int> RemovePlaylist(User user , string playlistname)
+    {
+      return  Task.Run(() =>
+        {
+            lock (_lock)
+            {
+                var _user = _db._users.Include(usr => usr.UserPlaylist).Single(usr => usr.Email == user.Email);
+                _user.UserPlaylist.RemoveAll(list => list.Name == playlistname);
+                _db._users.Update(_user);
+                return _db.SaveChanges();
+            }
+
+        });
+    }
+
     public Task<bool> PlaylistHasSong(User user , string playlistname , string songnname)
     {
     return    Task.Run(() =>
@@ -96,7 +126,7 @@ public class UserMusicService
         });
     }
     
-    public Task<ICollection<UserPlaylist>?> GetPlaylistForUser(User user)
+    public Task<List<UserPlaylist>?> GetPlaylistForUser(User user)
     {
        return Task.Run(() =>
        {
