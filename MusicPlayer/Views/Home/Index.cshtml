@@ -11,19 +11,18 @@
     <h1 class="display-4">And guess what!? we have playlists!</h1>
     @if (SignInManager.IsSignedIn(User))
     {
-         var _user_creation_result =   await UserMusicService.CreateNewSongUser(new User() {Email = User.Identity?.Name});
-        if (_user_creation_result > 0)
+        if (await UserMusicService.CreateNewSongUser(new User() {Email = User.Identity?.Name}) > 0)
         {
-            <p>Cool, this probably your first time logging in! welcome dude.</p>
+            <h1 style="color:green;">Cool, this probably your first time logging in! welcome dude.</h1>
         }
         else
         {
-            <p  style="color:green;" >welcome back @User.Identity?.Name</p>
+            <h1  style="color:green;" >Welcome back @User.Identity?.Name !</h1>
         }
  
     }
     else
     {
-        <p  style="color:red;" >sad news: you are not logged in yet!</p>
+        <h1  style="color:red;" >sad news: you are not logged in yet!</h1>
     }
 </div>

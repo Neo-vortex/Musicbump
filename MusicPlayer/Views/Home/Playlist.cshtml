@@ -9,23 +9,26 @@
 
 <div >
     <h1>Playlists:</h1>
-    <select id="SelectedTags" multiple="multiple" name="SelectedTags">
-        @{
-            List<UserPlaylist>? _playlists;
-            _playlists = (await UserMusicService.GetPlaylistForUser(new User() {Email = User.Identity?.Name}));
-            if (_playlists != null && _playlists.Any())
-            {
-                for (var i = 0; i < _playlists.Count(); i++)
-                {
-                    <option value=@_playlists[i].Name>@_playlists[i].Name</option>
+    <ol>
+              @{
+                    List<UserPlaylist>? _playlists;
+                    _playlists = (await UserMusicService.GetPlaylistForUser(new User() {Email = User.Identity?.Name}) ?? throw new InvalidOperationException()).ToList();
+                    if (_playlists != null && _playlists.Any())
+                    {
+                        for (var i = 0; i < _playlists.Count(); i++)
+                        {
+                            <a href="/playlist/@_playlists[i].Name">
+                                <li> @_playlists[i].Name</li>
+                            </a>
+                        }
+                    }
+                    else
+                    {
+                        <option value="null">[It's empty here!]</option>
+                    }
                 }
-            }
-            else
-            {
-                <option value="null">[It's empty here!]</option>
-            }
-        }
-    </select>
+    </ol>
+
     <div>
         <button >
                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="CreateNewPlaylist">Create a new playlist now!</a>

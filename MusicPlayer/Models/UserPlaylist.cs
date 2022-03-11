@@ -6,5 +6,5 @@ public class UserPlaylist
 {
     [Key]
     public string Name { get; set; }
-    public  List<UserSong> Songs { get; set; }
+    public virtual  List<UserSong> Songs { get; set; }
 }

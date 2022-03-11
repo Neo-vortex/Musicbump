@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using MusicPlayer.Models;
 using MusicPlayer.Services.UserMusicManager.dbManager;
 using NuGet.Protocol;
@@ -40,17 +41,8 @@ public class UserMusicService
                     throw new ArgumentException("user doesn't exists");
                 }
 
-                var _tmp = _db._users.Single(usr => usr.Email == user.Email);
-                if (_tmp.UserPlaylist == null)
-                {
-                    _db._users.Single(usr => usr.Email == user.Email).UserPlaylist = new List<UserPlaylist>()
-                    {
-                        new UserPlaylist()
-                            {Name = userPlaylist.Name, Songs = new List<UserSong>()}
-                    };
-                    return _db.SaveChanges();
-                }
-                _db._users.Single(usr => usr.Email == user.Email).UserPlaylist.Add(new UserPlaylist()
+                var x = _db._users.Single(usr => usr.Email == user.Email);
+                x.UserPlaylist.Add(new UserPlaylist()
                     {Name = userPlaylist.Name, Songs = new List<UserSong>()});
                 return _db.SaveChanges();
             }
@@ -79,15 +71,14 @@ public class UserMusicService
         });
     }
     
-    public Task<List<UserPlaylist>?> GetPlaylistForUser(User user)
+    public Task<ICollection<UserPlaylist>?> GetPlaylistForUser(User user)
     {
        return Task.Run(() =>
        {
            lock (_lock)
            {
-               var x = _db._users.Single(usr => usr.Email == user.Email);
-                return !_db._users.Any() ? null : _db._users.Single(usr => usr.Email == user.Email)?.UserPlaylist;
-            }
-        });
+               return !_db._users.Any() ? null : _db._users.Include(m => m.UserPlaylist).Single().UserPlaylist;
+           }
+       });
     }
 }
