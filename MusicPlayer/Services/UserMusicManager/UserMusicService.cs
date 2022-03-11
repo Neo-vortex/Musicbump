@@ -4,7 +4,7 @@ using NuGet.Protocol;
 
 namespace MusicPlayer.Services.UserMusicManager;
 
-public class UserMusicService : IUserMusicService
+public class UserMusicService
 {
     private UserMusicdb _db;
     private object _lock = new();
