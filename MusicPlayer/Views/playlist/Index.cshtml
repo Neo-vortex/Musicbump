@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@using Microsoft.AspNetCore.Identity
+@using MusicPlayer.Services.UserMusicManager
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@inject UserMusicService UserMusicService
+<div class="text-center">
+    <h1 class="display-4">Welcome to your very bare-bone music player.</h1>
+    <h1 class="display-4">And guess what!? we have playlists!</h1>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        if (await UserMusicService.CreateNewSongUser(new User() {Email = User.Identity?.Name}) > 0)
+        {
+            <h1 style="color:green;">Cool, this probably your first time logging in! welcome dude.</h1>
+        }
+        else
+        {
+            <h1  style="color:green;" >Welcome back @User.Identity?.Name !</h1>
+        }
+ 
+    }
+    else
+    {
+        <h1  style="color:red;" >sad news: you are not logged in yet!</h1>
+    }
+</div>
