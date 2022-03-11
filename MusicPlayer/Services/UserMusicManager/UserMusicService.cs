@@ -14,8 +14,33 @@ public class UserMusicService
         _db = new UserMusicdb();
     }
 
-    
-    
+    public Task<bool> PlaylistHasSong(User user , string playlistname , string songnname)
+    {
+    return    Task.Run(() =>
+        {
+            lock (_lock)
+            {
+                if (_db._users.Any(usr => usr.Email == user.Email)) return false;
+                return _db._users.Include(usr => usr.UserPlaylist).Single(usr => usr.Email == user.Email).UserPlaylist.Any(list => list.Name == playlistname) && _db._users.Include(usr => usr.UserPlaylist).Single(usr => usr.Email == user.Email).UserPlaylist.Single(list => list.Name == playlistname).Songs.Any(song => song.Name == songnname);
+            }
+        });
+    }
+
+
+    public Task<bool> UserHasPlaylist(User user, string playlistname)
+    {
+      return  Task.Run(() =>
+        {
+            lock (_lock)
+            {
+                if (! _db._users.Any(usr => usr.Email == user.Email)) return false;
+                return _db._users.Include(usr => usr.UserPlaylist).Single(usr => usr.Email == user.Email).UserPlaylist
+                    .Any(list => list.Name == playlistname);
+            }
+        });
+    }
+
+
     public Task<int> CreateNewSongUser(User user)
     {
         return Task.Run(() =>
@@ -77,7 +102,7 @@ public class UserMusicService
        {
            lock (_lock)
            {
-               return !_db._users.Any() ? null : _db._users.Include(m => m.UserPlaylist).Single().UserPlaylist;
+               return !_db._users.Any() ? null : _db._users.Include(m => m.UserPlaylist).Single(usr => usr.Email == user.Email).UserPlaylist;
            }
        });
     }
