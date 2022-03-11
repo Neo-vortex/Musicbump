@@ -1,0 +1,8 @@
+@model UserPlaylist
+
+<h1> Enter the name of your new playlist!</h1>
+@using (Html.BeginForm("CreateNewPlaylistService", "Home", FormMethod.Post))
+{
+    @Html.TextBoxFor(m => m.Name)
+    <button>Create</button>
+}

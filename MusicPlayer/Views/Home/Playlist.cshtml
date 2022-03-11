@@ -2,15 +2,42 @@
     ViewData["Title"] = "Playlist";
 }
 @using Microsoft.AspNetCore.Identity
+@using MusicPlayer.Services.UserMusicManager
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@inject UserMusicService UserMusicService
 
-<div>
-    <dl>
-      <dt>Musics</dt>
-        <dd>- black hot drink</dd>
-        <dd>- black hot drink</dd>
-        <dd>- black hot drink</dd>
-        <dd>- black hot drink</dd>
-    </dl>
+<div >
+    <h1>Playlists:</h1>
+    <select id="SelectedTags" multiple="multiple" name="SelectedTags">
+        @{
+            List<UserPlaylist>? _playlists;
+            _playlists = (await UserMusicService.GetPlaylistForUser(new User() {Email = User.Identity?.Name}));
+            if (_playlists != null && _playlists.Any())
+            {
+                for (var i = 0; i < _playlists.Count(); i++)
+                {
+                    <option value=@_playlists[i].Name>@_playlists[i].Name</option>
+                }
+            }
+            else
+            {
+                <option value="null">[It's empty here!]</option>
+            }
+        }
+    </select>
+    <div>
+        <button >
+               <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="CreateNewPlaylist">Create a new playlist now!</a>
+        </button>
+        
+    </div>
 </div>
+
+@*@model UserPlaylist
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Post))
+{
+    @Html.TextBoxFor(_playlist => _playlist.Name)
+    @Html.b
+}*@
