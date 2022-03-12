@@ -27,4 +27,8 @@
       <ProjectReference Include="..\MusicPlayer\MusicPlayer.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="TestResults" />
+    </ItemGroup>
+
 </Project>

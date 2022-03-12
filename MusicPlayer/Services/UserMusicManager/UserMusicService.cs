@@ -107,7 +107,7 @@ public class UserMusicService
     }
     
     
-    public Task<int> AddNewSong(User user, UserPlaylist playlist, UserSong song)
+    public Task<int> CreatNewSong(User user, UserPlaylist playlist, UserSong song)
     {
         return Task.Run(() =>
         {
@@ -121,12 +121,35 @@ public class UserMusicService
               {
                   throw new ArgumentException("playlist doesn't exists");
               }
-              _db._users.Single(usr => usr.Email == user.Email).UserPlaylist.Single(list => list.Name == playlist.Name).Songs.Add(song);
-              return _db.SaveChanges();
+           var xx =   _db._users.Include(usr => usr.UserPlaylist).ThenInclude(lst => lst.Songs).Single(usr => usr.Email == user.Email).UserPlaylist.Single(list => list.Name == playlist.Name);
+           var xxx = xx.Songs;
+           xxx.Add(song);
+           return _db.SaveChanges();
             }
         });
     }
-    
+
+
+    public Task<List<UserSong>> GetSongsForPlaylist(User user , string playlist)
+    {
+     return   Task.Run(() =>
+        {
+            lock (_lock)
+            {
+                if ( ! _db._users.Any(usr => usr.Email == user.Email) )
+                {
+                    throw new ArgumentException("user doesn't exists");
+                }
+                if (_db._users.Single(usr => usr.Email == user.Email).UserPlaylist.All(playlst => playlst.Name != playlist))
+                {
+                    throw new ArgumentException("playlist doesn't exists");
+                }
+                return _db._users.Include(usr => usr.UserPlaylist).ThenInclude(lst => lst.Songs)  .Single(usr => usr.Email == user.Email)
+                    .UserPlaylist.Single(list => list.Name == playlist).Songs;
+            }
+        });
+    }
+
     public Task<List<UserPlaylist>?> GetPlaylistForUser(User user)
     {
        return Task.Run(() =>

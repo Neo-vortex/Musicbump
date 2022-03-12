@@ -1,5 +1,5 @@
-﻿@*@{
-    ViewData["Title"] = "PLayer Page";
+﻿@{
+    ViewData["Title"] = "Playlist";
 }
 @using Microsoft.AspNetCore.Identity
 @using MusicPlayer.Services.UserMusicManager
@@ -7,21 +7,77 @@
 @inject UserManager<IdentityUser> UserManager
 @inject UserMusicService UserMusicService
 
-<div class="text-center">
-    <h1>Songs</h1>
-      <ol>
-
-      </ol>
-    @ViewBag.Message
-</div>*@
-<h1>Hello</h1>
+<h1>Current Playlist : @ViewBag.playlistname</h1>
 
 <div id="waveform"></div>
+   <br>
 <div>
-    <button id="playpause">play/pause</button>
-    <button id="next">next</button>
-    <button id="previous">previous</button>
-    <button id="muteunmute">mute/unmute</button>
+    <button class="btn btn-primary"  id="playpause">⏯️</button>
+    <button class="btn btn-primary"  id="next">⏭️</button>
+    <button  class="btn btn-primary"  id="previous">⏮️</button>
+    <button class="btn btn-primary"  id="muteunmute">🔇</button>
+    <button  class="btn btn-primary"  id="removesong">Remove this song from the playlist</button>
 </div>
-<script src='../js/wavesurfer.js'></script>
-<script src="../js/player.js"></script>
+<br>
+<div>
+    <p1>Song name : @ViewBag.songname</p1>
+</div>
+<div>   
+    @{
+        if (ViewBag.size == null)
+        {
+            <p1>Song size : NaN</p1>
+        }
+        else
+        {
+            <p1>Song size : @ViewBag.size bytes</p1>
+        }
+    }
+</div>
+<div>
+    <p1 id="songtime">Time :</p1>
+</div>
+<div>
+    <p1 id="currentime">Current time : </p1>
+</div>
+<div>
+    <br>
+    <br>
+    <h1>Songs</h1>
+    <br>
+    <ol >
+        @{
+            List<UserSong> songs = await UserMusicService.GetSongsForPlaylist(new User() {Email = User.Identity?.Name}, ViewBag.playlistname) ?? new List<UserSong>();
+            if (songs.Any())
+            {
+                foreach (var song in songs)
+                {
+                    <a href="/playlist/@ViewBag.playlistname/play/@song.Name">
+                        <li> @song.Name</li>
+                    </a>
+                }
+            }
+            else
+            {
+                <h1>[This playlist is empty]</h1>
+            }
+        }
+    </ol>
+</div>
+<div id="filepath" style="visibility: hidden" >@ViewBag.filepath</div>
+<br>
+
+
+<a href="/playlist/@ViewBag.playlistname/remove/">
+    <button class="btn  btn-primary" >Remove this playlist</button>
+</a>
+<button class="btn btn-primary"  >Rename this playlist</button>
+
+<button class="btn btn-primary">
+    @Html.ActionLink("Add a new song to this playlist from local disk", "SongFromLocal", new {playlist = ViewBag.playlistname}  )  
+</button>
+<button class="btn btn-primary">
+     @Html.ActionLink("Add a new song to this playlist from online resources", "SongFromOnline", new {playlist = ViewBag.playlistname}  )
+</button>
+<script src='~/js/wavesurfer.js'></script>
+<script src='~/js/player.js'></script>
