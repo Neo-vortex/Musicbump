@@ -121,9 +121,25 @@ public class PlaylistController : Controller
         ViewBag.playlistname = playlist;
         return View();
     }
+
     [Route("[controller]/{playlist}/rename/{newname}")]
     [Authorize]
-    public  async Task<IActionResult> Rename(string playlist, string newname )
+
+    public async Task<IActionResult> Rename(string playlist , string newname)
+    {
+        if (!await _userMusicService.UserHasPlaylist(new User() {Email = User.Identity?.Name}, playlist))
+            return NotFound("You do not have this playlist");
+        var result = await _userMusicService.RenamePlaylist(new User() {Email = User.Identity?.Name}, playlist , newname);
+        return Ok("fine");
+    }
+    
+    
+    
+    
+    
+    [Route("[controller]/{playlist}/rename/{newname}")]
+    [Authorize]
+    public  async Task<IActionResult> RenameService(string playlist, string newname )
     {
         if (!await _userMusicService.UserHasPlaylist(new User() {Email = User.Identity?.Name}, playlist))
             return NotFound("You do not have this playlist");
@@ -139,4 +155,17 @@ public class PlaylistController : Controller
         var result = await _userMusicService.RemovePlaylist(new User() {Email = User.Identity?.Name}, playlist);
         return View(result > 0 ? "Successful" : "Failed");
     }
+    
+    [Route("[controller]/{playlist}/songs/remove/{songname}")]
+    [Authorize]
+    public  async Task<IActionResult> RemoveSong(string playlist , string songname)
+    {
+        var result = await _userMusicService.RemoveSong(new User() {Email = User.Identity?.Name},
+            new UserPlaylist() {Name = playlist}, new UserSong() {Name = songname}) ;
+        return View(result > 0 ? "Successful" : "Failed");
+    }
+
+    
+    
+    
 }

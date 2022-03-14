@@ -1,0 +1,12 @@
+<form method="get" enctype="multipart/form-data" asp-controller="Playlist" asp-action="LocalUploadSongService">
+        <p>Adding the new song to this playlist (readonly) : </p>
+        <input  name="playlist"  readonly="readonly" value="@ViewBag.playlistname"/>
+        <br/>
+        <p>Name the song you want to add:</p>
+        <input type="text" name="songname" />
+        <br/>
+        <p>Select the file you want to add:</p>
+        <input type="file" name="files"  />
+        <br/>
+        <input type="submit" value="Upload" />
+</form>

@@ -28,7 +28,8 @@ if (  !(filepath === "")) {
 wavesurfer.on('ready', function () {
    console.log("song is ready")
     document.getElementById("songtime").innerText = "Time : ~ " +Math.round(wavesurfer.getDuration() /60.0)  + " min"
-    window.setInterval(getcurrentime, 1000);
+    window.setInterval(getcurrentime, 1000)
+    wavesurfer.playPause();
 });
 
 function getcurrentime(e){

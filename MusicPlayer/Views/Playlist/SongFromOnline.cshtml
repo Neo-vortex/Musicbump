@@ -1,9 +1,24 @@
 <form method="post" enctype="multipart/form-data" asp-controller="Playlist" asp-action="OnlineUploadSongService">
-    <p>Adding the new song to this playlist (readonly) : </p>
-    <input name="playlist" readonly="readonly" value="@ViewBag.playlistname"/>
-    <p>Name the song you want to add:</p>
-    <input type="text" name="songname"/>
-    <p>Wnter the URI to the song: </p>
-    <input type="text" name="files"/>
+    <div>
+            <p>Adding the new song to this playlist (readonly) : </p>
+            <input name="playlist" readonly="readonly" value="@ViewBag.playlistname"/>
+    </div>
+    <br/>
+    <div>
+           <p>Name the song you want to add:</p>
+           <input type="text" name="songname"/> 
+    </div>
+    <br/>
+    <div>
+        <p>Enter the URI to the song: </p>
+
+    </div>
+    <div>
+        <p1> Example : http://ia902606.us.archive.org/35/items/shortpoetry_047_librivox/song_cjrg_teasdale_64kb.mp3</p1>
+    </div>
+    <div>
+                <input type="text" name="files"/>
+    </div>
+    <br/>
     <input type="submit" value="Upload"/>
 </form>

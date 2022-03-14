@@ -105,7 +105,30 @@ public class UserMusicService
 
         });
     }
-    
+
+
+
+    public Task<int> RemoveSong(User user, UserPlaylist playlist, UserSong song)
+    {
+       return Task.Run(() =>
+        {
+            lock (_lock)
+            {
+                if ( _db._users.Single(usr => usr.Email == user.Email) == null )
+                {
+                    throw new ArgumentException("user doesn't exists");
+                }
+                if (_db._users.Single(usr => usr.Email == user.Email).UserPlaylist.All(playlst => playlst.Name != playlist.Name))
+                {
+                    throw new ArgumentException("playlist doesn't exists");
+                }
+                var xx =   _db._users.Include(usr => usr.UserPlaylist).ThenInclude(lst => lst.Songs).Single(usr => usr.Email == user.Email).UserPlaylist.Single(list => list.Name == playlist.Name);
+                var xxx = xx.Songs;
+                xxx.RemoveAll(sng => sng.Name == song.Name);
+                return _db.SaveChanges();
+            }
+        });
+    }
     
     public Task<int> CreatNewSong(User user, UserPlaylist playlist, UserSong song)
     {

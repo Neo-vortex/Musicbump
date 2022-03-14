@@ -13,14 +13,65 @@
    <br>
 <div>
     <button class="btn btn-primary"  id="playpause">⏯️</button>
-    <button class="btn btn-primary"  id="next">⏭️</button>
-    <button  class="btn btn-primary"  id="previous">⏮️</button>
+    <button class="btn btn-primary" id="next">
+        @{
+            List<UserSong> songs = await UserMusicService.GetSongsForPlaylist(new User() {Email = User.Identity?.Name}, ViewBag.playlistname) ?? new List<UserSong>();
+            if (!string.IsNullOrEmpty(ViewBag.songname))
+            {
+                var song_index = songs.IndexOf(songs.Single(song => song.Name == ViewBag.songname));
+                if (  song_index != songs.Count-1)
+                {
+                    <a href="/playlist/@ViewBag.playlistname/play/@songs[song_index+1].Name">⏭️</a>
+                }
+                else
+                {
+                    <p1>⏭</p1>  
+                }
+            }
+            else
+            {
+                <p1>⏭</p1>  
+            }
+        }
+
+    </button>
+    <button class="btn btn-primary" id="previous">
+        @{
+            if (!string.IsNullOrEmpty(ViewBag.songname))
+            {
+                var song_index = songs.IndexOf(songs.Single(song => song.Name == ViewBag.songname));
+                if (  song_index != 0)
+                {
+                    <a href="/playlist/@ViewBag.playlistname/play/@songs[song_index-1].Name">⏮️</a>
+                }
+                else
+                {
+                    <p1>⏮</p1>
+                }
+            }
+            else
+            {
+                <p1>⏮</p1>
+            }
+        }
+    </button>
     <button class="btn btn-primary"  id="muteunmute">🔇</button>
-    <button  class="btn btn-primary"  id="removesong">Remove this song from the playlist</button>
+    <button  id="removesong">
+        @{
+            if (!string.IsNullOrEmpty(ViewBag.songname))
+            {
+                <a href="/playlist/@ViewBag.playlistname/songs/remove/@ViewBag.songname">Remove this song from the playlist️</a>
+            }
+            else
+            {
+                <p1>Remove this song from the playlist</p1>
+            }
+        }
+    </button>
 </div>
 <br>
 <div>
-    <p1>Song name : @ViewBag.songname</p1>
+    <p1>Song name : <strong>@ViewBag.songname</strong> </p1>
 </div>
 <div>   
     @{
@@ -47,7 +98,6 @@
     <br>
     <ol >
         @{
-            List<UserSong> songs = await UserMusicService.GetSongsForPlaylist(new User() {Email = User.Identity?.Name}, ViewBag.playlistname) ?? new List<UserSong>();
             if (songs.Any())
             {
                 foreach (var song in songs)
@@ -68,15 +118,19 @@
 <br>
 
 
-<a href="/playlist/@ViewBag.playlistname/remove/">
-    <button class="btn  btn-primary" >Remove this playlist</button>
-</a>
-<button class="btn btn-primary"  >Rename this playlist</button>
 
-<button class="btn btn-primary">
+<button >
+    <a href="/playlist/@ViewBag.playlistname/remove/">
+            Remove this playlist
+    </a>
+</button>
+
+<button   >Rename this playlist</button>
+
+<button >
     @Html.ActionLink("Add a new song to this playlist from local disk", "SongFromLocal", new {playlist = ViewBag.playlistname}  )  
 </button>
-<button class="btn btn-primary">
+<button >
      @Html.ActionLink("Add a new song to this playlist from online resources", "SongFromOnline", new {playlist = ViewBag.playlistname}  )
 </button>
 <script src='~/js/wavesurfer.js'></script>
