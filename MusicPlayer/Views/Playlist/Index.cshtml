@@ -15,23 +15,32 @@
     <button class="btn btn-primary"  id="playpause">⏯️</button>
     <button class="btn btn-primary" id="next">
         @{
-            List<UserSong> songs = await UserMusicService.GetSongsForPlaylist(new User() {Email = User.Identity?.Name}, ViewBag.playlistname) ?? new List<UserSong>();
-            if (!string.IsNullOrEmpty(ViewBag.songname))
+            var songs =new List<UserSong>() ;
+            try
             {
-                var song_index = songs.IndexOf(songs.Single(song => song.Name == ViewBag.songname));
-                if (  song_index != songs.Count-1)
+              songs = await UserMusicService.GetSongsForPlaylist(new User() {Email = User.Identity?.Name}, ViewBag.playlistname) ?? new List<UserSong>();
+                if (!string.IsNullOrEmpty(ViewBag.songname))
                 {
-                    <a href="/playlist/@ViewBag.playlistname/play/@songs[song_index+1].Name">⏭️</a>
+                    var song_index = songs.IndexOf(songs.Single(song => song.Name == ViewBag.songname));
+                    if (  song_index != songs.Count-1)
+                    {
+                        <a href="/playlist/@ViewBag.playlistname/play/@songs[song_index+1].Name">⏭️</a>
+                    }
+                    else
+                    {
+                        <p1>⏭</p1>  
+                    }
                 }
                 else
                 {
                     <p1>⏭</p1>  
                 }
             }
-            else
+            catch (Exception e)
             {
-                <p1>⏭</p1>  
+                <p1>⏭</p1> 
             }
+          
         }
 
     </button>
@@ -125,7 +134,12 @@
     </a>
 </button>
 
-<button   >Rename this playlist</button>
+<button >
+        <a href="/playlist/@ViewBag.playlistname/renamepage/">
+            Rename this playlist
+        </a>
+
+</button>
 
 <button >
     @Html.ActionLink("Add a new song to this playlist from local disk", "SongFromLocal", new {playlist = ViewBag.playlistname}  )  

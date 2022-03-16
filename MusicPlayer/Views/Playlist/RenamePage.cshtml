@@ -1,0 +1,9 @@
+<form method="post" asp-controller="Editor" asp-action="RenameService" >
+        <p>Renaming this playlist (readonly) : </p>
+        <input  name="playlist"  readonly="readonly" value="@ViewBag.playlistname"/>
+        <br/>
+        <p>Enter the new name here : </p>
+        <input type="text" name="newname" />
+        <br/>
+        <input type="submit" value="Change" />
+</form>

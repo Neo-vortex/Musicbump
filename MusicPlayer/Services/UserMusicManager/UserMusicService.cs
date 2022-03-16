@@ -36,7 +36,7 @@ public class UserMusicService
             lock (_lock)
             {
                 var _user = _db._users.Include(usr => usr.UserPlaylist).Single(usr => usr.Email == user.Email);
-                _user.UserPlaylist.RemoveAll(list => list.Name == playlistname);
+                if ( _user.UserPlaylist.Any(list => list.Name == playlistname))    _user.UserPlaylist.RemoveAll(list => list.Name == playlistname);
                 _db._users.Update(_user);
                 return _db.SaveChanges();
             }
